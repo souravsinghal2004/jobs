@@ -1,0 +1,76 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+        
+
+enum JobType {
+  JOB
+  INTERNSHIP
+}
+
+enum WorkingHours {
+  FLEXIBLE
+  FIXED
+}
+
+enum ApplicationStatus {
+  PENDING
+  SHORTLISTED
+  HIRED
+  REJECTED
+}
+
+model User {
+  id            String           @id @default(uuid())
+  clerkUserId   String           @unique
+  email         String           @unique
+  name          String?
+  imageUrl      String?
+  phone         String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  applications  JobApplication[]
+}
+
+model Job {
+  id              String           @id @default(uuid())
+  type            JobType
+  salaryMin       Int
+  salaryMax       Int
+  location        String
+  companyName     String
+  skillsRequired  String[]         // array of skills
+  jobProfile      String
+  workingHours    WorkingHours
+  perks           String[]         // medical, insurance, etc.
+  duration        String?
+  jobDescription  String?
+  aboutCompany    String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  applications    JobApplication[]
+
+
+}
+
+model JobApplication {
+  id              String            @id @default(uuid())
+  userId          String
+  jobId           String
+  status          ApplicationStatus @default(PENDING)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  user            User              @relation(fields: [userId], references: [id])
+  job             Job               @relation(fields: [jobId], references: [id])
+
+  @@index([jobId])
+  @@index([userId])
+  @@index([status])
+}
