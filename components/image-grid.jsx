@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import SmartLink from './SmartLink';
 
 const imageSets = [
   [
@@ -40,7 +41,7 @@ export default function ImageGrid() {
       {imageSets.map((set, idx) => {
         const current = set[activeIndexes[idx]];
         return (
-          <Link
+          <SmartLink
             key={idx}
             href={current.link}
             className="flex flex-col items-center justify-center bg-zinc-800/60 backdrop-blur-md rounded-xl shadow-md p-4 hover:scale-105 transition-transform"
@@ -57,7 +58,7 @@ export default function ImageGrid() {
             <p className="mt-3 text-sm sm:text-base font-medium text-white">
               {current.name}
             </p>
-          </Link>
+          </SmartLink>
         );
       })}
     </div>

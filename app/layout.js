@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
       <html lang="en" className="dark"> 
       <body
         className={`${geist.className} `}       >
-          <RouteLoadingNotifier />
+       
         <Header/>
         <main className=" min-h-screen ">{children}</main>
            <Toaster position="top-right" richColors />

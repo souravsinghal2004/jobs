@@ -2,39 +2,35 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { toast } from 'sonner'
 
 export default function RouteLoadingNotifier() {
-  const router = useRouter()
+  const pathname = usePathname()
+  const prevPath = useRef(pathname)
   const timeoutRef = useRef(null)
   const toastId = useRef(null)
 
   useEffect(() => {
-    const handleStart = () => {
+    if (prevPath.current !== pathname) {
+      // Route change started
+      clearTimeout(timeoutRef.current)
+
       timeoutRef.current = setTimeout(() => {
         toastId.current = toast.loading('Working on it... Please wait.')
-      }, 2000) // wait 2s before showing
-    }
+      }, 1000)
 
-    const handleComplete = () => {
-      clearTimeout(timeoutRef.current)
-      if (toastId.current) {
-        toast.dismiss(toastId.current)
-        toastId.current = null
-      }
+      // Route change complete
+      setTimeout(() => {
+        clearTimeout(timeoutRef.current)
+        if (toastId.current) {
+          toast.dismiss(toastId.current)
+          toastId.current = null
+        }
+        prevPath.current = pathname
+      }, 2000)
     }
-
-    router.events?.on('routeChangeStart', handleStart)
-    router.events?.on('routeChangeComplete', handleComplete)
-    router.events?.on('routeChangeError', handleComplete)
-
-    return () => {
-      router.events?.off('routeChangeStart', handleStart)
-      router.events?.off('routeChangeComplete', handleComplete)
-      router.events?.off('routeChangeError', handleComplete)
-    }
-  }, [router])
+  }, [pathname])
 
   return null
 }

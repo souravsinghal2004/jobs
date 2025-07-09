@@ -55,23 +55,30 @@ export function JobDetails({ job }) {
     fileInputRef.current.value = "";
   };
 
-  const handleApply = async () => {
-    if (!resumeFile) {
-      toast.warning("Please upload your resume before applying");
-      return;
-    }
+ const handleApply = async () => {
+  if (!resumeFile) {
+    toast.warning("Please upload your resume before applying");
+    return;
+  }
 
-    setIsApplying(true);
-    try {
-      await applyToJob(job.id);
-      setHasApplied(true);
-      toast.success("Applied successfully!");
-    } catch (error) {
-      toast.error(error?.message || "Application failed");
-    } finally {
-      setIsApplying(false);
-    }
-  };
+  setIsApplying(true);
+  try {
+    await applyToJob(job.id);
+    toast.success("Applied successfully!");
+
+    // Determine redirect path based on job type
+    const redirectTo = job.type === "INTERNSHIP" ? "/internship" : "/jobsss";
+
+    // Redirect after short delay
+    setTimeout(() => {
+      window.location.href = redirectTo;
+    }, 1500);
+  } catch (error) {
+    toast.error(error?.message || "Application failed");
+  } finally {
+    setIsApplying(false);
+  }
+};
 
   const disabled = !resumeFile || hasApplied || isApplying;
 

@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import SmartLink from "./SmartLink";
 
 export default function JobCard({ job }) {
   const maxSkillsToShow = 3;
@@ -74,7 +75,7 @@ export default function JobCard({ job }) {
 
       <CardFooter className="flex justify-end">
         <Button asChild>
-          <Link href={`/jobs/${job?.id}`}>View</Link>
+          <SmartLink href={`/jobs/${job?.id}`}>View</SmartLink>
         </Button>
       </CardFooter>
     </Card>
